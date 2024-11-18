@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الفائزون بدوري أبطال أوروبا</title>
+    <style>
+        body {
+            font-family: "Tajawal", sans-serif;
+            background: linear-gradient(135deg, #004d7a, #00bf72);
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            color: #ffcc00;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        input[type="number"] {
+            width: 60%;
+            max-width: 400px;
+            padding: 10px;
+            font-size: 16px;
+            margin: 20px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #004d7a;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border: 2px solid #ffcc00;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #fff;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+        footer {
+            margin-top: 30px;
+            font-size: 1em;
+            color: #ffcc00;
+        }
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #004d7a;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #003653;
+        }
+    </style>
+</head>
+<body>
+    <h1>الفائزون بدوري أبطال أوروبا</h1>
+    <p>اكتب السنة لمعرفة الفائز:</p>
+    <input type="number" id="yearInput" placeholder="أدخل السنة (1960 - 2024)">
+    <button onclick="showWinner()">عرض الفائز</button>
+    <div class="result" id="result"></div>
+
+    <footer>
+        <p>تم الإنشاء بواسطة <a href="#">إياد شادي</a> © 2024</p>
+    </footer>
+
+    <script>
+        // قاعدة بيانات الفرق الفائزة
+        const champions = {
+            "1960": "ريال مدريد",
+            "1961": "بنفيكا",
+            "1962": "بنفيكا",
+            "1963": "إيه سي ميلان",
+            "1964": "إنتر ميلان",
+            "1965": "إنتر ميلان",
+            "1966": "ريال مدريد",
+            "1967": "سيلتيك",
+            "1968": "مانشستر يونايتد",
+            "1969": "إيه سي ميلان",
+            "1970": "فينورد",
+            "1971": "أياكس",
+            "1972": "أياكس",
+            "1973": "أياكس",
+            "1974": "بايرن ميونخ",
+            "1975": "بايرن ميونخ",
+            "1976": "بايرن ميونخ",
+            "1977": "ليفربول",
+            "1978": "ليفربول",
+            "1979": "نوتنغهام فورست",
+            "1980": "نوتنغهام فورست",
+            "1981": "ليفربول",
+            "1982": "أستون فيلا",
+            "1983": "هامبورغ",
+            "1984": "ليفربول",
+            "1985": "يوفنتوس",
+            "1986": "ستيوا بوخارست",
+            "1987": "بورتو",
+            "1988": "بي إس في آيندهوفن",
+            "1989": "إيه سي ميلان",
+            "1990": "إيه سي ميلان",
+            "1991": "النجم الأحمر بلغراد",
+            "1992": "برشلونة",
+            "1993": "مارسيليا",
+            "1994": "إيه سي ميلان",
+            "1995": "أياكس",
+            "1996": "يوفنتوس",
+            "1997": "بوروسيا دورتموند",
+            "1998": "ريال مدريد",
+            "1999": "مانشستر يونايتد",
+            "2000": "ريال مدريد",
+            "2001": "بايرن ميونخ",
+            "2002": "ريال مدريد",
+            "2003": "إيه سي ميلان",
+            "2004": "بورتو",
+            "2005": "ليفربول",
+            "2006": "برشلونة",
+            "2007": "إيه سي ميلان",
+            "2008": "مانشستر يونايتد",
+            "2009": "برشلونة",
+            "2010": "إنتر ميلان",
+            "2011": "برشلونة",
+            "2012": "تشيلسي",
+            "2013": "بايرن ميونخ",
+            "2014": "ريال مدريد",
+            "2015": "برشلونة",
+            "2016": "ريال مدريد",
+            "2017": "ريال مدريد",
+            "2018": "ريال مدريد",
+            "2019": "ليفربول",
+            "2020": "بايرن ميونخ",
+            "2021": "تشيلسي",
+            "2022": "ريال مدريد",
+            "2023": "مانشستر سيتي",
+            "2024": "سيتم تحديث الفائز بعد الإعلان"
+        };
+
+        // دالة لعرض الفريق الفائز
+        function showWinner() {
+            const year = document.getElementById("yearInput").value;
+            const resultDiv = document.getElementById("result");
+
+            if (champions[year]) {
+                resultDiv.style.display = "block";
+                resultDiv.innerHTML = `<p><strong>الفائز في ${year}:</strong> ${champions[year]}</p>`;
+            } else {
+                resultDiv.style.display = "block";
+                resultDiv.innerHTML = `<p><strong>لا توجد معلومات عن السنة ${year}</strong></p>`;
+            }
+        }
+    </script>
+</body>
+</html>
